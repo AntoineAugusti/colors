@@ -1,6 +1,8 @@
 package colors
 
 import (
+	"fmt"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -38,7 +40,7 @@ func TestIsReserved(t *testing.T) {
 	assert.False(t, res)
 }
 
-func TestisHexadecimalCharacter(t *testing.T) {
+func TestIsHexadecimalCharacter(t *testing.T) {
 	assert.True(t, isHexadecimalCharacter("A"))
 	assert.True(t, isHexadecimalCharacter("B"))
 	assert.True(t, isHexadecimalCharacter("C"))
@@ -47,7 +49,7 @@ func TestisHexadecimalCharacter(t *testing.T) {
 	assert.True(t, isHexadecimalCharacter("4"))
 }
 
-func TestisHexadecimal(t *testing.T) {
+func TestIsHexadecimal(t *testing.T) {
 	assert.True(t, isHexadecimal("ffffff"))
 	assert.True(t, isHexadecimal("FFaa65"))
 	assert.True(t, isHexadecimal("c769fe"))
@@ -55,4 +57,47 @@ func TestisHexadecimal(t *testing.T) {
 	assert.False(t, isHexadecimal("fffff"))
 	assert.False(t, isHexadecimal("c769fea"))
 	assert.False(t, isHexadecimal("c769fg"))
+}
+
+func ExampleStringToHexColor_namedColor() {
+	fmt.Println(StringToHexColor("white"))
+	// Output: #ffffff
+}
+
+func ExampleStringToHexColor_hexadecimalString() {
+	fmt.Println(StringToHexColor("FFFFFF"))
+	// Output: #ffffff
+}
+
+func ExampleStringToHexColor_otherHexadecimalString() {
+	fmt.Println(StringToHexColor("#FFFFFF"))
+	// Output: #ffffff
+}
+
+func ExampleStringToHexColor_randomString() {
+	fmt.Println(StringToHexColor("chucknorris"))
+	// Output: #c00000
+}
+
+func ExampleStringToHexColor_otherNamedColor() {
+	fmt.Println(StringToHexColor("limegreen"))
+	// Output: #32cd32
+}
+
+func ExampleIsReserved_namedColor() {
+	reserved, value := IsReserved("red")
+	fmt.Fprintf(os.Stdout, "reserved: %t, value: %s", reserved, value)
+	// Output: reserved: true, value: #ff0000
+}
+
+func ExampleIsReserved_hexadecimalColor() {
+	reserved, value := IsReserved(" ffFFff  ")
+	fmt.Fprintf(os.Stdout, "reserved: %t, value: %s", reserved, value)
+	// Output: reserved: true, value: #ffffff
+}
+
+func ExampleIsReserved_unknowWord() {
+	reserved, value := IsReserved("foo")
+	fmt.Fprintf(os.Stdout, "reserved: %t, value: %s", reserved, value)
+	// Output: reserved: false, value:
 }

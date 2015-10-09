@@ -1,3 +1,6 @@
+// This package lets you transform a string to its hexadecimal representation
+// according to the HTML5 specification:
+// http://www.w3.org/TR/2011/WD-html5-20110525/common-microsyntaxes.html#colors
 package colors
 
 import (
@@ -5,6 +8,10 @@ import (
 	"strings"
 )
 
+// Transform a string to its hexadecimal representation according
+// to the HTML5 specification: http://www.w3.org/TR/2011/WD-html5-20110525/common-microsyntaxes.html#colors
+//
+// An example of the hexadecimal format for the output is the following: #f3f3f3
 func StringToHexColor(str string) string {
 	if isReserved, value := IsReserved(str); isReserved {
 		return value
@@ -36,12 +43,21 @@ func StringToHexColor(str string) string {
 	return final
 }
 
-func IsReserved(str string) (bool, string) {
+// Check if a color string is reserved.
+//
+// A string is "reserved" if it looks like an hexadecimal
+// color ("#ff0099", "ff0099", "  #ff0099  "...)
+// OR is a reserved color keyword according to http://www.w3.org/TR/css3-color/#svg-color
+// ("red", " RED  ", "transparent"...)
+//
+// If the string is reserved, return also its hexadecimal format value.
+// An example of the hexadecimal format for the output is the following: #f3f3f3
+func IsReserved(str string) (reserved bool, hexadecimalValue string) {
 	str = strings.TrimSpace(str)
 
 	// Match something like "#ff0099"
 	if len(str) == 7 && str[0] == '#' && isHexadecimal(str[1:]) {
-		return true, "#" + strings.ToLower(str[1:])
+		return true, strings.ToLower(str)
 	}
 
 	// Match something like "ff0099"
